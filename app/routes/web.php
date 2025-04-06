@@ -21,8 +21,8 @@ Route::group(['middleware'], function () {
         return view('welcome');
     });
 
-    Route::get('/thread', [threadController::class, 'index'])->name('create.thread');
-    Route::post('/thread', [threadController::class, 'createthread']);
+    Route::get('/thread', [threadController::class, 'index'])->name('thread.create');
+    Route::post('/thread', [threadController::class, 'createthread'])->name('create.thread');
     Route::get('/detail/{id}', [threadController::class, 'threaddetail'])->name('thread.detail');
     Route::get('/physical/delete/{id}', [threadController::class, 'threadphysicaldelete'])->name('physical_delete.thread');
     Route::get('/logical/delete/{id}', [threadController::class, 'threadlogicaldelete'])->name('logical_delete.thread');

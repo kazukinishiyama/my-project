@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateData;
 
 class commentController extends Controller
 {
@@ -19,7 +20,7 @@ class commentController extends Controller
     }
 
 
-    public function createComment(int $threadId, Request $request)
+    public function createComment(int $threadId, CreateData $request)
     {
 
         $comments = new Comment;

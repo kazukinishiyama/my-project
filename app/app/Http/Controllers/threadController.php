@@ -6,6 +6,7 @@ use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Thread;
+use App\Http\Requests\CreateData;
 
 class threadController extends Controller
 {
@@ -29,7 +30,7 @@ class threadController extends Controller
         ]);
     }
 
-    public function createthread(Request $request)
+    public function createthread(CreateData $request)
     {
 
         $threads = new Thread;

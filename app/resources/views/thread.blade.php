@@ -32,6 +32,18 @@
 
 <body>
     <!-- スレッド作成フォーム -->
+    @if($errors->any())
+        <div class='alert alert-danger'>
+            <ul>
+                @foreach($errors->all() as $message)
+                    <li>
+                        {{ $message }}
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    </div>
     <form action="{{ route('create.thread') }}" method="POST">
         @csrf
         新規作成　：

@@ -12,6 +12,18 @@
 </head>
 
 <body>
+    @if($errors->any())
+        <div class='alert alert-danger'>
+            <ul>
+                @foreach($errors->all() as $message)
+                    <li>
+                        {{ $message }}
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    </div>
     <!-- スレタイ表示 -->
     <p>タイトル : {{ $threads->name }}</p>
     @if ($threads['user_id'] == Auth::id())

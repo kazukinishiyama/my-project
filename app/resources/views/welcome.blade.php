@@ -1,1 +1,1 @@
-<a href="{{ route('create.thread') }}">スタート</a>
+<a href="{{ route('thread.create') }}">スタート</a>
