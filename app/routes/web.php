@@ -1,7 +1,9 @@
 <?php
 
+use App\Comment;
 use App\Http\Controllers\commentController;
 use App\Http\Controllers\threadController;
+use App\Thread;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -23,12 +25,19 @@ Route::group(['middleware'], function () {
 
     Route::get('/thread', [threadController::class, 'index'])->name('thread.create');
     Route::post('/thread', [threadController::class, 'createthread'])->name('create.thread');
-    Route::get('/detail/{id}', [threadController::class, 'threaddetail'])->name('thread.detail');
-    Route::get('/physical/delete/{id}', [threadController::class, 'threadphysicaldelete'])->name('physical_delete.thread');
-    Route::get('/logical/delete/{id}', [threadController::class, 'threadlogicaldelete'])->name('logical_delete.thread');
-    Route::post('/creat/comment/{id}', [commentController::class, 'createComment'])->name('create.comment');
-    Route::get('/comment/physical_delete/{thread_id}/{comment_id}', [CommentController::class, 'physicalDelete'])->name('physical_delete.comment');
-    Route::get('/comment/logical_delete/{thread_id}/{comment_id}', [CommentController::class, 'logicalDelete'])->name('logical_delete.comment');
+    
+    Route::group(['middleware' => 'can:view,thread'], function () {
+        Route::get('/detail/{thread}', [threadController::class, 'threaddetail'])->name('thread.detail');
+        Route::post('/creat/comment/{thread}', [commentController::class, 'createComment'])->name('create.comment');
+    });
 
+    Route::group(['midllware' => 'can:delete,thread'], function () {
+        Route::get('/physical/delete/{thread}', [threadController::class, 'threadphysicaldelete'])->name('physical_delete.thread');
+        Route::get('/logical/delete/{thread}', [threadController::class, 'threadlogicaldelete'])->name('logical_delete.thread');
+    });
 
+    Route::group(['middleware' => 'can:delete,comment'], function () {
+        Route::get('/comment/physical_delete/{thread}/{comment}', [commentController::class, 'physicaldeletecomment'])->name('physical_delete.comment');
+        Route::get('/comment/logical_delete/{thread}/{comment}', [commentController::class, 'logicaldeletecomment'])->name('logical_delete.comment');
+    });
 });

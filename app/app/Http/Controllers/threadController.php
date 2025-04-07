@@ -42,34 +42,28 @@ class threadController extends Controller
         return redirect('/thread');
     }
 
-    public function threaddetail(int $threadId)
+    public function threaddetail(Thread $thread)
     {
-        $threads = Thread::find($threadId);
-        $comments = Comment::where('thread_id', $threadId)
+        $comments = Comment::where('thread_id', $thread->id)
             ->where('del_flg', 0)
             ->get();
-        if (!$comments) {
-            $comments = collect([]);
-        }
-        return view('detail_thread', [
-            'threads' => $threads,
-            'comments' => $comments
-        ]);
 
+        return view('detail_thread', [
+            'threads' => $thread,
+            'comments' => $comments,
+        ]);
     }
 
-    public function threadphysicaldelete(int $threadId)
+    public function threadphysicaldelete(Thread $thread)
     {
-        $threads = Thread::find($threadId);
-        $threads->delete();
+        $thread->delete();
         return redirect('/thread');
     }
 
-    public function threadlogicaldelete(int $threadId)
+    public function threadlogicaldelete(Thread $thread)
     {
-        $threads = Thread::find($threadId);
-        $threads->del_flg = 1;
-        $threads->save();
+        $thread->del_flg = 1;
+        $thread->save();
         return redirect('/thread');
     }
 }

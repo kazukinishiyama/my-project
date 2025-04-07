@@ -59,7 +59,7 @@
         <p>タイトル一覧</p>
         @foreach ($threads as $thread)
             <li>
-                <a href="{{ route('thread.detail', ['id' => $thread['id']]) }}">{{ $thread['name'] }}</a>
+                <a href="{{ route('thread.detail', ['thread' => $thread['id']]) }}">{{ $thread['name'] }}</a>
             </li>
         @endforeach
     </ul>

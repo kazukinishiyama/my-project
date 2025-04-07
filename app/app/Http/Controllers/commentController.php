@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Thread;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateData;
@@ -19,32 +20,27 @@ class commentController extends Controller
         ]);
     }
 
-
-    public function createComment(int $threadId, CreateData $request)
+    public function createComment(Thread $thread, CreateData $request)
     {
+        $comment = new Comment;
+        $comment->user_id = Auth::id();
+        $comment->thread_id = $thread->id;
+        $comment->content = $request->content;
+        $comment->save();
 
-        $comments = new Comment;
-
-        $comments->user_id = Auth::id();
-        $comments->thread_id = $threadId;
-        $comments->content = $request->content;
-
-        $comments->save();
-        return redirect()->route('thread.detail', ['id' => $threadId]);
+        return redirect()->route('thread.detail', ['thread' => $thread]);
     }
 
-    public function physicaldeletecomment(int $thread_id, int $comment_id)
+    public function physicaldeletecomment(Thread $thread, Comment $comment)
     {
-        $comments = Comment::find($comment_id);
-        $comments->delete();
-        return redirect()->route('thread.detail', ['id' => $thread_id]);
+        $comment->delete();
+        return redirect()->route('thread.detail', ['thread' => $thread]);
     }
 
-    public function logicaldeletecomment(int $thread_id, int $comment_id)
+    public function logicaldeletecomment(Thread $thread, Comment $comment)
     {
-        $comments = Comment::find($CommentId);
-        $comments->del_flg = 1;
-        $comments->save();
-        return redirect()->route('thread.detail', ['id' => $thread_id]);
+        $comment->del_flg = 1;
+        $comment->save();
+        return redirect()->route('thread.detail', ['thread' => $thread]);
     }
 }
