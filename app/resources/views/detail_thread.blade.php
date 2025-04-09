@@ -9,9 +9,37 @@
 <head>
     <meta charset="utf-8">
     <title>スレッド詳細画面</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Font Awesome 追加！ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <style>
+        .toggle_wish i {
+            color: #ccc;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .toggle_wish.liked i {
+            color: #e25555;
+            transform: scale(1.2);
+        }
+
+        .toggle_wish i:active {
+            transform: scale(1.3);
+            opacity: 0.8;
+        }
+    </style>
+
 </head>
 
+
 <body>
+
     @if($errors->any())
         <div class='alert alert-danger'>
             <ul>
@@ -23,9 +51,27 @@
             </ul>
         </div>
     @endif
-    </div>
+
+    <p>like_thread: {{ $threads->isLikedBy(Auth::user()) ? 1 : 0 }}</p>
+    <p>thread_id: {{ $threads->id }}</p>
+
     <!-- スレタイ表示 -->
     <p>タイトル : {{ $threads->name }}</p>
+    <!--  いいねボタン -->
+
+    @if (auth()->user())
+        @if ($threads->isLikedBy(auth()->user()))
+            <a class="toggle_wish liked" thread_id="{{ $threads->id }}" like_thread="1">
+                <i class="fas fa-heart"></i>
+            </a>
+        @else
+            <a class="toggle_wish" thread_id="{{ $threads->id }}" like_thread="0">
+                <i class="far fa-heart"></i>
+            </a>
+        @endif
+    @endif
+
+
     @if ($threads['user_id'] == Auth::id())
         <!-- 物理削除 -->
         タイトル :
@@ -68,6 +114,7 @@
 
     <!-- 戻る -->
     <a href="{{ route('create.thread') }}">戻る</a>
+    <script src="{{ asset('js/like.js') }}"></script>
 </body>
 
 </html>
