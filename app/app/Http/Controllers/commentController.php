@@ -26,6 +26,10 @@ class commentController extends Controller
         $comment->user_id = Auth::id();
         $comment->thread_id = $thread->id;
         $comment->content = $request->content;
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('comment_images', 'public');
+            $comment->image_path = $path;
+        }
         $comment->save();
 
         return redirect()->route('thread.detail', ['thread' => $thread]);

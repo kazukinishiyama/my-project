@@ -17,13 +17,13 @@ class likeController extends Controller
         $userId = auth()->id();
         $productId = $request->input('thread_id');
 
-        logger('-----------test-----------------');
-        logger($productId);
-        logger('-----------test-----------------');
+        // logger('-----------test-----------------');
+        // logger($productId);
+        // logger('-----------test-----------------');
 
-        logger('-----------test-----------------');
-        logger($request->input('like_thread'));
-        logger('-----------test-----------------');
+        // logger('-----------test-----------------');
+        // logger($request->input('like_thread'));
+        // logger('-----------test-----------------');
 
         if ($request->input('like_thread') == 0) {
             Like::create([

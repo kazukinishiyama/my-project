@@ -26,7 +26,10 @@ class CreateData extends FormRequest
         if ($this->routeIs('create.thread')) {
             return ['name' => 'required'];
         } elseif ($this->routeIs('create.comment')) {
-            return ['content' => 'required'];
+            return [
+                'content' => 'required',
+                'image' => 'nullable|image|max:4096'
+            ];
         }
 
         return [];

@@ -52,8 +52,8 @@
         </div>
     @endif
 
-    <p>like_thread: {{ $threads->isLikedBy(Auth::user()) ? 1 : 0 }}</p>
-    <p>thread_id: {{ $threads->id }}</p>
+    <!-- <p>like_thread: {{ $threads->isLikedBy(Auth::user()) ? 1 : 0 }}</p>
+    <p>thread_id: {{ $threads->id }}</p> -->
 
     <!-- スレタイ表示 -->
     <p>タイトル : {{ $threads->name }}</p>
@@ -86,6 +86,10 @@
             <li>
                 {{ $comment['content'] }}
 
+                @if ($comment->image_path)
+                    <img src="{{ asset('storage/' . $comment->image_path) }}" alt="投稿画像" style="max-width: 300px;">
+                @endif
+
                 {{-- 自分のコメントだけ削除リンクを表示 --}}
                 @if ($comment['user_id'] == Auth::id())
                     <a
@@ -97,20 +101,16 @@
         @empty
             <p>まだコメントがないよ</p>
         @endforelse
-
     </ul>
 
 
     <!-- コメント追加 -->
-    @auth
-        <form action="{{ route('create.comment', ['thread' => $threads['id']]) }}" method="post">
-            @csrf
-            <input type="text" name="content" placeholder="コメントを入力">
-            <button type="submit">送信</button>
-        </form>
-    @else
-        <p><a href="{{ route('login') }}">ログイン</a>するとコメントできます！</p>
-    @endauth
+    <form action="{{ route('create.comment', ['thread' => $threads['id']]) }}" method="post" enctype="multipart/form-data">
+        @csrf
+        <input type="text" name="content" placeholder="コメントを入力">
+        <input type="file" name="image">
+        <button type="submit">送信</button>
+    </form>
 
     <!-- 戻る -->
     <a href="{{ route('create.thread') }}">戻る</a>
