@@ -21,14 +21,38 @@ class threadController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $threads = new Thread;
-        $all = $threads->where('del_flg', 0)->get()->toArray();
+        $query = Thread::withCount('likes');
+
+        // いいね済みフィルタ
+        if ($request->filled('liked_only') && Auth::check()) {
+            $likedIds = Auth::user()->likes()->pluck('thread_id')->toArray();
+            $query->whereIn('id', $likedIds);
+        }
+
+        // 自分の投稿のみフィルタ
+        if ($request->filled('own_only') && Auth::check()) {
+            $query->where('user_id', Auth::id());
+        }
+
+        // ソート処理
+        if ($request->sort === 'latest') {
+            $query->orderBy('created_at', 'desc');
+        } elseif ($request->sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($request->sort === 'likes') {
+            $query->orderBy('likes_count', 'desc');
+        }
+
+        $threads = $query->get();
+
         return view('thread', [
-            'threads' => $all
+            'threads' => $threads,
+            'request' => $request, // 必要なら渡す
         ]);
     }
+
 
     public function createthread(CreateData $request)
     {

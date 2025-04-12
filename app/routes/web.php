@@ -19,27 +19,40 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::group(['middleware'], function () {
+Route::group(['middleware' => 'auth'], function () {
+
+    // ホーム画面（認証後）
     Route::get('/', function () {
         return view('welcome');
     });
 
+    // スレッド作成と一覧
     Route::get('/thread', [threadController::class, 'index'])->name('thread.create');
     Route::post('/thread', [threadController::class, 'createthread'])->name('create.thread');
 
-    Route::group(['middleware' => 'can:view,thread'], function () {
-        Route::get('/detail/{thread}', [threadController::class, 'threaddetail'])->name('thread.detail');
-        Route::post('/creat/comment/{thread}', [commentController::class, 'createComment'])->name('create.comment');
-    });
+    // スレッド詳細・コメント作成（論理削除されたスレッドも管理者なら閲覧可）
+    Route::get('/detail/{thread}', [threadController::class, 'threaddetail'])
+        ->middleware('can:view,thread')->name('thread.detail');
+    Route::post('/creat/comment/{thread}', [commentController::class, 'createComment'])
+        ->middleware('can:view,thread')->name('create.comment');
 
-    Route::group(['midllware' => 'can:delete,thread'], function () {
-        Route::get('/physical/delete/{thread}', [threadController::class, 'threadphysicaldelete'])->name('physical_delete.thread');
-        Route::get('/logical/delete/{thread}', [threadController::class, 'threadlogicaldelete'])->name('logical_delete.thread');
-    });
+    // スレッド削除
+    Route::get('/physical/delete/{thread}', [threadController::class, 'threadphysicaldelete'])
+        ->middleware('can:delete,thread')->name('physical_delete.thread');
 
-    Route::group(['middleware' => 'can:delete,comment'], function () {
-        Route::get('/comment/physical_delete/{thread}/{comment}', [commentController::class, 'physicaldeletecomment'])->name('physical_delete.comment');
-        Route::get('/comment/logical_delete/{thread}/{comment}', [commentController::class, 'logicaldeletecomment'])->name('logical_delete.comment');
-    });
+    Route::get('/logical/delete/{thread}', [threadController::class, 'threadlogicaldelete'])
+        ->middleware('can:delete,thread')->name('logical_delete.thread');
+
+    // コメント削除（管理者 or 自分のコメントのみ）
+    Route::get('/comment/physical_delete/{thread}/{comment}', [commentController::class, 'physicaldeletecomment'])
+        ->middleware('can:delete,comment')->name('physical_delete.comment');
+
+    Route::get('/comment/logical_delete/{thread}/{comment}', [commentController::class, 'logicaldeletecomment'])
+        ->middleware('can:delete,comment')->name('logical_delete.comment');
+
+    // いいね
     Route::post('/like_thread', [likeController::class, 'toggleLike'])->name('thred.like');
 });
+
+// デフォルトルート（ログイン後の遷移先）
+Route::get('/home', 'HomeController@index')->name('home');

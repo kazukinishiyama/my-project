@@ -25,7 +25,7 @@ class LikePolicy
      * Determine whether the user can view the lile.
      *
      * @param  \App\User  $user
-     * @param  \App\Lile  $lile
+     * @param  \App\Like  $like
      * @return mixed
      */
     public function view(User $user, Lile $lile)

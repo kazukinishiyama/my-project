@@ -30,8 +30,7 @@ class ThreadPolicy
      */
     public function view(User $user, Thread $thread)
     {
-        //
-        return true;
+        return !$thread->del_flg || $user->isAdmin();
     }
 
     /**
@@ -66,8 +65,7 @@ class ThreadPolicy
      */
     public function delete(User $user, Thread $thread)
     {
-        //
-        return $user->id === $thread->user_id;
+        return $user->id === $thread->user_id || $user->isAdmin();
     }
 
     /**
@@ -91,6 +89,6 @@ class ThreadPolicy
      */
     public function forceDelete(User $user, Thread $thread)
     {
-        //
+        return $user->isAdmin();
     }
 }

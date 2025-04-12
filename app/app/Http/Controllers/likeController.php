@@ -38,7 +38,8 @@ class likeController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'liked' => !$request->input('like_thread')
+            'liked' => !$request->input('like_thread'),
+            'likes_count' => Thread::find($request->input('thread_id'))->likes->count()
         ]);
 
         // return $request->input('like_thread');

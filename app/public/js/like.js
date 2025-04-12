@@ -23,13 +23,14 @@ $(function () {
             data: { 'thread_id': thread_id, 'like_thread': like_thread },
         })
             .done(function (data) {
+                click_button.find('.like-count').text(data.likes_count); 
                 if (data.liked) {
                     click_button.attr("like_thread", "1");
-                    click_button.children().attr("class", "fas fa-heart");
+                    click_button.children("i").attr("class", "fas fa-heart");
                     click_button.addClass("liked");
                 } else {
                     click_button.attr("like_thread", "0");
-                    click_button.children().attr("class", "far fa-heart");
+                    click_button.children("i").attr("class", "far fa-heart");
                     click_button.removeClass("liked");
                 }
             })
