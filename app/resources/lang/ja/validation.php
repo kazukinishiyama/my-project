@@ -148,7 +148,9 @@ return [
 
     'attributes' => [
         'name' => 'スレッドタイトル',
-        'content' => 'コメント内容'
+        'content' => 'コメント内容',
+        'email' => 'メールアドレス',
+        'password' => 'パスワード',
     ],
 
 ];

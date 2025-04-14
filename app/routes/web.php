@@ -52,6 +52,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // いいね
     Route::post('/like_thread', [likeController::class, 'toggleLike'])->name('thred.like');
+
+    Route::resource('users', UserController::class);
 });
 
 // デフォルトルート（ログイン後の遷移先）

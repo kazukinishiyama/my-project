@@ -27,6 +27,7 @@
                         @csrf
                         <button type="submit" class="btn btn-outline-secondary btn-sm">ログアウト</button>
                     </form>
+                    <a href="{{ route('users.edit', auth()->id()) }}" class="btn btn-outline-info btn-sm ms-2">ユーザーネーム編集</a>
                 @else
                     <a class="btn btn-outline-primary btn-sm me-2" href="{{ route('login') }}">ログイン</a>
                     <a class="btn btn-primary btn-sm" href="{{ route('register') }}">会員登録</a>
